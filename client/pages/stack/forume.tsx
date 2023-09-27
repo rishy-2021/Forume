@@ -148,7 +148,7 @@ function ForuMe({ user }) {
               Sorry, your browser doesn't support embedded videos.
             </video>
           </div>
-          {/* <div className="shadow-lg w-full text-gray-400 shadow-gray-600 rounded-xl mt-10 px-4 pt-4 pb-3">
+          <div className="shadow-lg w-full text-gray-400 shadow-gray-600 rounded-xl mt-10 px-4 pt-4 pb-3">
             <p className="font-semibold text-gray-700">Top Users</p>
             <div className="">
               <article className="flex text-xs justify-between items-center mt-3">
@@ -367,10 +367,9 @@ function ForuMe({ user }) {
                 </article>
               </div>
             )}
-          </div> */}
+          </div>
         </section>
       </main>
-
       {/* <Contact user={user} /> */}
     </div>
   );

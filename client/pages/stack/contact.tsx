@@ -27,7 +27,7 @@ function Contact({ user }) {
     <>
       <div className="Contact_Page bg-gray-50 flex flex-col-reverse mb-16 lg:flex-row lg:justify-center">
         <div className="left lg:w-[50%]">
-          <div className="top bg-[url('/city.jpg')] bg-cover bg-center h-[1000px] cover"></div>
+          <div className="top bg-[url('/images/city.jpg')] bg-cover bg-center h-[1000px] cover"></div>
           <div className="down flex gap-1 sm:gap-16 md:gap-36 lg:gap-8 xl:gap-24 justify-center items-center text-xs px-6 py-6 bg-gray-300 sm:px-8 sm:py-4 md:px-14 lg:px-40">
             <ul
               className="flex mr-2 items-center font-bold

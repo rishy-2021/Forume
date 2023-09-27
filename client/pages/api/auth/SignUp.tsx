@@ -162,13 +162,13 @@ const SignUpForm = () => {
               }}
               className="flex item-center justify-center social shadow-md hover:-translate-y-1 ease duration-300 h-12 w-12 p-1 cursor-pointer   hover:text-white rounded-full"
             >
-              <img src="/google.svg" alt="hhhh" />
+              <img src="/images/google.svg" alt="hhhh" />
             </a>
             <a
               // onClick={() => signIn("email", { email: email })}
               className="flex item-center justify-center social shadow-md hover:-translate-y-1 ease duration-300 h-12 w-12 p-1 cursor-pointer   hover:text-white rounded-full"
             >
-              <img src="/facebook.svg" alt="hhhh" />
+              <img src="/images/facebook.svg" alt="hhhh" />
             </a>
             <a
               onClick={() => {
@@ -176,7 +176,7 @@ const SignUpForm = () => {
               }}
               className="flex item-center justify-center social shadow-md hover:-translate-y-1 ease duration-300 h-12 w-12 p-1 cursor-pointer   hover:text-white rounded-full"
             >
-              <img src="/twitter.svg" alt="hhhh" />
+              <img src="/images/twitter.svg" alt="hhhh" />
             </a>
           </div>
         </div>

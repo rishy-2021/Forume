@@ -123,7 +123,7 @@ export default function Solar(props) {
         </section>
       </div>
       <div className="right w-full text-gray-100 sm:px-4 md:px-8 sm:py-4 lg:w-full">
-        <section className="bg-[url('/city.jpg')] bg-cover bg-center relative shadow-md top sm:rounded-lg bg-[#29348e] px-4 pt-10 pb-4 md:px-6 sm:mb-8 lg:px-10">
+        <section className="bg-[url('/images/city.jpg')] bg-cover bg-center relative shadow-md top sm:rounded-lg bg-[#29348e] px-4 pt-10 pb-4 md:px-6 sm:mb-8 lg:px-10">
           <div className="mt-6">
             <h1 className="text-4xl font-semibold mb-8 sm:text-5xl lg:text-7xl">
               Solar eclipses: <br />
