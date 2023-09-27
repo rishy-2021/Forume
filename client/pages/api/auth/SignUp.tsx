@@ -1,14 +1,14 @@
 import { getCsrfToken, signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 
-const SignUpForm = ({ csrfToken }) => {
+const SignUpForm = () => {
   // const { data: session, status } = useSession();
 
   // if (status) {
   //   console.log("loading");
   // }
 
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState('');
 
   const PostData = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>

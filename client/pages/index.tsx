@@ -1,8 +1,7 @@
 import type { NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
-import ForuMe from "./Stack/ForuMe";
+import ForuMe from "./stack/forume";
 
 const Home: NextPage = ({ user }) => {
   const { data: session, status } = useSession();
