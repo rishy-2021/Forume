@@ -13,18 +13,12 @@ import QuestionAsk from "../popups/stack/question-ask";
 // import video from "../../video/v1.mp4";
 
 function ForuMe({ user }) {
-  const src =
-    "https://res.cloudinary.com/dckyh6od6/video/upload/v1669828329/ritesh_purwar/2022-11-30-22-25-05_Trim_Trim_xadilq.mp4";
-  // axios.defaults.withCredentials = true;
-  // it's a video url
 
   const router = useRouter();
-
   const [queask, setqueask] = useState(false);
   const [num, setNum] = useState(0);
   // const [disapr, setdisapr] = useState(false);
   const [appr, setappr] = useState(false);
-
   const [Questions, setAllQuestions] = useState();
 
   useEffect(() => {
@@ -36,8 +30,6 @@ function ForuMe({ user }) {
       })
       .catch((error) => console.log(error));
   }, []);
-
-  // console.log(Questions, "uiuiiui");
 
   useEffect(() => {
     axios
@@ -62,20 +54,9 @@ function ForuMe({ user }) {
             console.log("User has already logged in");
           }
         }
-
-        // setuserCoins(response.data.data)
       )
       .catch((error) => console.log(error));
-    // };
   }, []);
-
-  // const saveScore = () => {
-  //   axios
-
-  //     .post("http://localhost:3001/api/question/addScore", { score: num })
-  //     .then((response) => console.log(response))
-  //     .catch((error) => console.log(error));
-  // };
 
   return (
     <div className="relative h-screen">
@@ -92,7 +73,6 @@ function ForuMe({ user }) {
           Save Quiz Score
         </button>
       </div> */}
-
       <main className="md:flex  lg:px-10 xl:px-32 2xl:px-28 md:px-14">
         <section className="text-gray-500 middle mt-16 gap-8 px-4 text-sm sm:px-16 md:px-8 md:w-[70%] xl:w-[79%]">
           {!Questions && (
@@ -108,7 +88,6 @@ function ForuMe({ user }) {
               </h1>
             </div>
           )}
-
           {Questions &&
             Questions.map((questions, index) => (
               <Question user={user} questions={questions} key={index} />
@@ -144,7 +123,7 @@ function ForuMe({ user }) {
               height="800px"
               className="rounded-xl"
             >
-              <source src={src} type="video/mp4" />
+              <source src='/videos/demo.mp4' type="video/mp4" />
               Sorry, your browser doesn't support embedded videos.
             </video>
           </div>
