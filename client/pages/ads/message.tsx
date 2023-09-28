@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import ClicksCardMessage from './ClickCard/ClicksCardMessage'
+import ClicksCardMessage from './clickcard/ClicksCardMessage'
 
 function MessageAds() {
     const router = useRouter()

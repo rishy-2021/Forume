@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import ClicksCardProfile from './ClickCard/ClicksCardProfile'
+import ClicksCardProfile from './clickcard/ClicksCardProfile'
 function profilerank() {
     const router = useRouter()
     return (

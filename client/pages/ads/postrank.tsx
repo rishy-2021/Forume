@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import ClicksCardPost from './ClickCard/ClicksCardPost'
+import ClicksCardPost from './clickcard/ClicksCardPost'
 function post() {
     const router = useRouter();
     return (

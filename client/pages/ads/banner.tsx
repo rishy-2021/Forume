@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Router } from 'react-router-dom'
-import ClicksCardBanner from './ClickCard/ClicksCardBanner'
+import ClicksCardBanner from './clickcard/ClicksCardBanner'
 function banner() {
     const router = useRouter();
     return (
