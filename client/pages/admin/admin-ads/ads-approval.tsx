@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import Listing_Header from "../Listing_Header";
-import Admin_Header from "../Admin_Header";
+import Listing_Header from "../listing-header";
+import Admin_Header from "../admin-header";
 function AdsApproval() {
   const router = useRouter();
   return (
