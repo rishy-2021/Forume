@@ -1,24 +1,27 @@
-import React, { Component, useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 // import Admin_Header from "./Admin_Header";
 // import Listing_Header from "./Listing_Header";
+
+interface Message {
+  name: string;
+  email: string;
+  message: string;
+  _id: string;
+}
+
 function Feedback() {
-  const [messages, setAllMessages] = useState([]);
+  const [messages, setAllMessages] = useState<Message[]>([]);
 
   useEffect(function () {
     axios
-
       .get("https://qna-site-server.onrender.com/api/message/getMessages")
       .then((response) => setAllMessages(response.data.data))
       .catch((error) => console.log(error));
   });
 
-  //   console.log(messages);
-
   function dismiss(mid) {
     axios
-
       .delete(
         `https://qna-site-server.onrender.com/api/message/deleteMessages/${mid}`
       )

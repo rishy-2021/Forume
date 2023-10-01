@@ -1,9 +1,16 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+
+interface TempQues {
+  title: string;
+  body: string;
+  tags: string[];
+}
+
 interface DisapprProps {
   trigger: Boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-  children?: React.ReactNode;
+  ques: TempQues;
 }
 var id = 0;
 function DissaprPopUp({ trigger, setTrigger, ques }: DisapprProps) {

@@ -3,10 +3,16 @@ import React, { useEffect, useState } from "react";
 import ApprovePopUp from "../popups/stack/approve";
 import DissaprPopUp from "../popups/stack/disapprove";
 
+interface TempQues {
+  title: string;
+  body: string;
+  tags: string[];
+}
+
 function Admin_Question() {
   const [disapr, setdisapr] = useState(false);
   const [appr, setappr] = useState(false);
-  const [tempQues, setTempQues] = useState();
+  const [tempQues, setTempQues] = useState<TempQues[]>([]);
 
   useEffect(
     function () {

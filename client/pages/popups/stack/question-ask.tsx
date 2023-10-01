@@ -5,14 +5,15 @@ import { useState } from "react";
 interface AskProps {
   trigger: Boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  user: any
 }
 export default function QuestionAsk({ user, trigger, setTrigger }: AskProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [quesImage, setQuesImage] = useState("");
+  const [tags, setTags] = useState<any[]>([]);
 
-  const [tags, setTags] = useState([]);
   function handleKeyDown(e) {
     if (e.key !== "Enter") return;
     const value = e.target.value;
@@ -23,8 +24,8 @@ export default function QuestionAsk({ user, trigger, setTrigger }: AskProps) {
   function removeTag(index) {
     setTags(tags.filter((el, i) => i !== index));
   }
-  const QuestionSubmit = () => {
 
+  const QuestionSubmit = () => {
     axios
       .post("https://qna-site-server.onrender.com/api/question", {
         title: title,
@@ -49,6 +50,7 @@ export default function QuestionAsk({ user, trigger, setTrigger }: AskProps) {
     reader.readAsDataURL(file);
 
     reader.onloadend = () => {
+    if(typeof(reader.result) == 'string')
       setQuesImage(reader.result);
     };
   };

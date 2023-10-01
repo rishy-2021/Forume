@@ -15,8 +15,8 @@ export default function Solar(props) {
   const [titlecover, settitlecover] = useState(false);
   const [ques, setQuestions] = useState([]);
 
-  const [answers, setUserAnswers] = useState({});
-  const [qanswers, setQuesAnswers] = useState({});
+  const [answers, setUserAnswers] = useState([]);
+  const [qanswers, setQuesAnswers] = useState([]);
   const [data, setData] = useState();
   const [disableLike, setDisableLike] = useState(false);
   const [disableDislike, setDisableDislike] = useState(false);

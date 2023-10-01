@@ -4,19 +4,19 @@ import React, { useState, useEffect } from "react";
 interface ApprProps {
   trigger: Boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  question:any;
+  user:any
+  type:any
 }
 var id = 0;
 function ReportPopUp({ trigger, setTrigger, question, user, type }: ApprProps) {
   const [sq, setSq] = useState([]);
-  //   console.log("ooooooooooopppppppp", type);
 
   function report(question) {
     axios
       .post("https://qna-site-server.onrender.com/api/question/report", {
         qid: question._id,
-
         quesTitle: question.title,
-
         user: user,
         type: type,
       })
@@ -33,7 +33,6 @@ function ReportPopUp({ trigger, setTrigger, question, user, type }: ApprProps) {
             <div className="flex p-3 justify-between">
               <h1 className="text-lg ml-4 ">Verify Again</h1>
             </div>
-
             {/* center */}
             <div className="p-5   ml-2 h-96 w-full  flex  flex-col">
               <h1>Are You Sure You want to Report this Question?</h1>
@@ -49,7 +48,6 @@ function ReportPopUp({ trigger, setTrigger, question, user, type }: ApprProps) {
                   onClick={() => {
                     setTrigger(false);
                     report(question);
-                    // console.log(ques);
                   }}
                 >
                   Yes

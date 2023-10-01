@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import Listing_Header from "../listing-header";
 import Admin_Header from "../admin-header";
@@ -9,7 +8,6 @@ function AdsApproval() {
     <>
       <Admin_Header />
       <Listing_Header />
-
       <div className="lg:ml-12  lg:w-full mt-4">
         <table className="w-full">
           <thead className="bg-gray-50 border-b-2 border-gray-200">

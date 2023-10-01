@@ -3,23 +3,19 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-// import path from "path";
 import ReactLoading from "react-loading";
-// import Contact from "../components/contact";
 import Header from "../../components/header";
 import Question from "../../components/question";
 import LoginPopUp from "../popups/stack/login-popup";
 import QuestionAsk from "../popups/stack/question-ask";
-// import video from "../../video/v1.mp4";
 
 function ForuMe({ user }) {
-
   const router = useRouter();
   const [queask, setqueask] = useState(false);
   const [num, setNum] = useState(0);
   // const [disapr, setdisapr] = useState(false);
   const [appr, setappr] = useState(false);
-  const [Questions, setAllQuestions] = useState();
+  const [Questions, setAllQuestions] = useState([]);
 
   useEffect(() => {
     axios
