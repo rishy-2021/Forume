@@ -8,25 +8,25 @@ function Listing_Header() {
       <ul className="flex  shadow-lg px-4 pt-4 pb-6 bg-white w-full justify-center ">
         <li
           className="w-[30%] text-center text-white text-xl mr-12 cursor-pointer hover:bg-blue-500 bg-blue-400 p-2 rounded-lg"
-          onClick={() => router.push("/Admin/AdminListing/admin_listing")}
+          onClick={() => router.push("/admin/admin-listing/admin_listing")}
         >
           Profile
         </li>
         <li
           className="w-[30%] text-center text-white text-xl mr-12 cursor-pointer hover:bg-blue-500 bg-blue-400 p-2 rounded-lg"
-          onClick={() => router.push("/Admin/AdminListing/ReportListing")}
+          onClick={() => router.push("/admin/admin-listing/ReportListing")}
         >
           Report
         </li>
         <li
           className="w-[30%] text-center text-white text-xl cursor-pointer hover:bg-blue-500 bg-blue-400 p-2 rounded-lg mr-12"
-          onClick={() => router.push("/Admin/AdminListing/feedback")}
+          onClick={() => router.push("/admin/admin-listing/feedback")}
         >
           Feedback
         </li>
         <li
           className="w-[30%] text-center text-white text-xl cursor-pointer hover:bg-blue-500 bg-blue-400 p-2 mr-12 rounded-lg"
-          onClick={() => router.push("/Admin/AdminListing/ReviewReport")}
+          onClick={() => router.push("/admin/admin-listing/ReviewReport")}
         >
           Review Reports
         </li>
