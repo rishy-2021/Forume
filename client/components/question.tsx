@@ -1,47 +1,35 @@
-import React, { useState, useEffect } from "react";
-import ReactLoading from "react-loading";
-import Share from "react-native-share";
-import Image from "next/image";
+import React, { useState, useEffect, FC } from "react";
 import {
   IoShareSocialOutline,
-  IoEllipsisVerticalOutline,
 } from "react-icons/io5";
-import { IoIosNotificationsOutline } from "react-icons/io";
 import { BsHeart } from "react-icons/bs";
-import Answer from "./answer";
-// import SharePopUp from "../pages/PopUps/SharePopUp";
 import axios from "axios";
-import AnswerPopUp from "../pages/popups/stack/answer-submit";
-import { useRouter } from "next/router";
-// import QueAnsPage from "../pages/Stack/QueAnsPage";
+import {AnswerPopUp} from "../pages/popups/stack/answer-submit";
 import Link from "next/link";
 import Sharexpop from "../pages/popups/stack/sharexpop";
-import ReportPopUp from "../pages/popups/stack/report-question";
+import {ReportPopUp} from "../pages/popups/stack/report-question";
 import LoginPopUp from "../pages/popups/stack/login-popup";
+import {DateTime} from "luxon"
+import { useDate } from "../utils/use-date";
+interface Props {
+  email: string;
+  questions:any;
+}
 
-function Question({ user, questions }) {
-  const router = useRouter();
-
-  const [visi, setvisi] = useState(false);
+export const Question: FC<Props> = ({email, questions}) => {
   const [sharepop, setsharepop] = useState(false);
   const [queask, setqueask] = useState(false);
   const [answers, setAllAnswers] = useState([]);
-  const currentDate = new Date();
-  // const questionPd = new Date(questions.created_at);
   const [totalImpression, setTotalImpression] = useState(
     questions?.likes?.length - questions?.dislikes?.length
   );
 
   const [appr, setappr] = useState(false);
   const [appear, setappear] = useState(false);
-
   const [like, setLike] = useState(questions?.likes);
   const [dislike, setDisLike] = useState(questions.dislikes);
 
-  function getDifferenceInDays(date1, date2) {
-    const diffInMs = Math.abs(date2 - date1);
-    return diffInMs / (1000 * 60 * 60 * 24);
-  }
+  const currentDate = DateTime.utc().toISO()!.toString();
 
   useEffect(function () {
     axios
@@ -73,8 +61,6 @@ function Question({ user, questions }) {
       });
   }
 
-  // console.log(like, dislike);
-
   function unlikePost(questions, user) {
     axios
       .put("https://qna-site-server.onrender.com/api/question/dislike", {
@@ -90,7 +76,6 @@ function Question({ user, questions }) {
         setLike(response?.data?.data?.likes);
         setDisLike(response?.data?.data?.dislikes);
       })
-
       .catch((err) => {
         console.log(err);
       });
@@ -102,7 +87,7 @@ function Question({ user, questions }) {
         <div className="left mt-2 mr-3 md:mr-6">
           <LoginPopUp trigger={appear} setTrigger={setappear} />
           <ul className="flex flex-col items-center">
-            {like.includes(user?.email) ? (
+            {like.includes(email) ? (
               <li className=" cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -120,8 +105,8 @@ function Question({ user, questions }) {
             ) : (
               <li
                 onClick={() => {
-                  user && likePost(questions, user);
-                  !user && setappear(true);
+                  email && likePost(questions, email);
+                  !email && setappear(true);
                 }}
                 className="text-blue-500 cursor-pointer"
               >
@@ -147,7 +132,7 @@ function Question({ user, questions }) {
               }
             </li>
 
-            {dislike.includes(user?.email) ? (
+            {dislike.includes(email) ? (
               <li className="cursor-pointer ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -167,10 +152,10 @@ function Question({ user, questions }) {
               <li
                 onClick={() => {
                   {
-                    user && unlikePost(questions, user);
+                    email && unlikePost(questions, email);
                   }
                   {
-                    !user && setappear(true);
+                    !email && setappear(true);
                   }
                 }}
                 className="cursor-pointer text-blue-500"
@@ -232,13 +217,8 @@ function Question({ user, questions }) {
                   {questions?.user?.name}
                 </span>
               </li>
-
               <li>
-                {(
-                  (currentDate - new Date(questions.created_at)) /
-                  (1000 * 60 * 60 * 24)
-                ).toFixed()}
-                {"  "} day ago
+             { useDate(questions.created_at , currentDate)} ago
               </li>
             </ul>
 
@@ -249,18 +229,17 @@ function Question({ user, questions }) {
                   className="cursor-pointer text-md"
                   onClick={() => {
                     {
-                      user && setappr(true);
+                      email && setappr(true);
                     }
                     {
-                      !user && setappear(true);
+                      !email && setappear(true);
                     }
                   }}
                 >
                   Report
                 </li>
-
                 <ReportPopUp
-                  user={user}
+                  email={email}
                   type={"Question"}
                   trigger={appr}
                   question={questions}
@@ -276,18 +255,13 @@ function Question({ user, questions }) {
                 </li>
               </ul>
               <Sharexpop trigger={sharepop} setTrigger={setsharepop} />
-
               <ul className="flex justify-between items-center">
                 <li className="mr-1 cursor-pointer">
                   <Link
                     href={{
                       pathname: "/stack/que-ans-page",
                       query: {
-                        id: questions._id,
-                        ad: (
-                          (currentDate - new Date(questions.created_at)) /
-                          (1000 * 60 * 60 * 24)
-                        ).toFixed(),
+                        id: questions._id
                       },
                     }}
                     className=" font-semibold  rounded-lg p-1   hover:text-green-400"
@@ -316,11 +290,7 @@ function Question({ user, questions }) {
               href={{
                 pathname: "/stack/que-ans-page",
                 query: {
-                  id: questions._id,
-                  ad: (
-                    (currentDate - new Date(questions.created_at)) /
-                    (1000 * 60 * 60 * 24)
-                  ).toFixed(),
+                  id: questions._id
                 },
               }}
               className=" font-semibold  rounded-lg p-1   hover:text-green-400"
@@ -330,20 +300,13 @@ function Question({ user, questions }) {
               </a>
             </Link>
             <button
-              onClick={() => {
-                {
-                  user && setqueask(true);
-                }
-                {
-                  !user && setappear(true);
-                }
-              }}
+              onClick={() => email ? setqueask(true) : setappear(true)}
               className="   absolute right-12 bg-blue-400 shadow-lg border-white border text-white p-1 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
             >
               Post Answer
             </button>
             <AnswerPopUp
-              user={user}
+              email={email}
               question={questions}
               trigger={queask}
               setTrigger={setqueask}

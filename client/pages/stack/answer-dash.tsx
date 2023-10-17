@@ -1,9 +1,14 @@
+import { FC, useEffect, useState } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 
-function AnswerDash({ qid, user }) {
-  const [answers, setAllAnswers] = useState();
-  const [data, setData] = useState([]);
+interface Props{
+  qid: string;
+  name: string;
+}
+
+export const AnswerDash: FC<Props> = ({ qid, name }) => {
+  const [answers, setAllAnswers] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]); //FIXME: fix any type
   const currentDate = new Date();
   // const answerPd = new Date(answer.created_at);
   //   console.log(answers, qid);
@@ -12,8 +17,6 @@ function AnswerDash({ qid, user }) {
     const diffInMs = Math.abs(date2 - date1);
     return diffInMs / (1000 * 60 * 60 * 24);
   }
-
-  // const askedDate = getDifferenceInDays(currentDate, answerPd);
 
   useEffect(
     function () {
@@ -30,16 +33,12 @@ function AnswerDash({ qid, user }) {
   const likePost = (id, username) => {
     axios
       .put(
-        "https://qna-site-server.onrender.com/api/answer/like",
-        {
+        "https://qna-site-server.onrender.com/api/answer/like",{
           postId: id,
           username: username,
         }
-        // }
       )
-      // .then((res) => res.json())
       .then((result) => {
-        console.log(result);
         const newData = data.map((answer) => {
           if (answer._id == result._id) {
             return result;
@@ -63,7 +62,6 @@ function AnswerDash({ qid, user }) {
         }
         // }
       )
-      // .then((res) => res.json())
       .then((result) => {
         console.log(result);
         const newData = data.map((answer) => {
@@ -165,7 +163,7 @@ function AnswerDash({ qid, user }) {
                   ) : (
                     <li
                       onClick={() => {
-                        likePost(answer._id, user.name);
+                        likePost(answer._id, name);
                       }}
                       className="text-blue-500 cursor-pointer"
                     >
@@ -187,10 +185,10 @@ function AnswerDash({ qid, user }) {
                   <li className="font-semibold ml-1.5 text-base">
                     {answer.likes.length}
                   </li>
-                  {answer.likes.includes(user.name) ? (
+                  {answer.likes.includes(name) ? (
                     <li
                       onClick={() => {
-                        unlikePost(answer._id, user.name);
+                        unlikePost(answer._id, name);
                       }}
                       className="cursor-pointer text-blue-500"
                     >
