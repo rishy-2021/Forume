@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-// import { url } from "inspector";
-import { useRouter, withRouter } from "next/router";
+import React, { FC, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { getSession } from "next-auth/react";
-import QuestionAsk from "../popups/stack/question-ask";
+import {QuestionAsk} from "../popups/stack/question-ask";
 import TitleCoverPopUp from "../popups/stack/title-cover";
-
 import DashQuestion from "../../components/dash-question";
-export default function Solar(props) {
+
+export interface User {
+  name: string;
+  email: string;
+  image: string;
+};
+
+export default function Solar ({email }: User) {
   const router = useRouter();
-  // const questions = props.data.data;
-  const user = props.user;
   const [titlecover, settitlecover] = useState(false);
   const [ques, setQuestions] = useState([]);
 
   const [answers, setUserAnswers] = useState([]);
-  const [qanswers, setQuesAnswers] = useState([]);
-  const [data, setData] = useState();
-  const [disableLike, setDisableLike] = useState(false);
-  const [disableDislike, setDisableDislike] = useState(false);
   const [userCoins, setuserCoins] = useState();
 
   var questions = [...ques].reverse();
@@ -27,11 +25,10 @@ export default function Solar(props) {
   useEffect(
     function () {
       axios
-
         .post(
           "https://qna-site-server.onrender.com/api/question/allUserQuestions",
           {
-            user: user,
+            email: email, //FIXME: also change in server user to email
           }
         )
         .then((response) => setQuestions(response.data.data))
@@ -40,7 +37,7 @@ export default function Solar(props) {
         .post(
           "https://qna-site-server.onrender.com/api/answer/allUserAnswers",
           {
-            user: user,
+            email: email, //FIXME: also change in server user to email
           }
         )
         .then((response) => setUserAnswers(response.data.data))
@@ -50,7 +47,7 @@ export default function Solar(props) {
   );
   useEffect(() => {
     axios
-      .post("http://localhost:3001/api/coins/getUserCoins", { user: user })
+      .post("http://localhost:3001/api/coins/getUserCoins", { email: email }) //FIXME: also change in server user to email
       .then((response) => {
         console.log("coinsData ", response);
         setuserCoins(response.data.data);
@@ -158,24 +155,23 @@ export default function Solar(props) {
                 Ask a question
               </li>
             </ul>
-            <QuestionAsk trigger={quespop} setTrigger={setquespop} />
-          </div>
-          <svg
+            <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-8 w-8 mt-0.5"
             viewBox="0 0 20 20"
             fill="currentColor"
             onClick={() => settitlecover(true)}
           >
             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
           </svg>
+            <QuestionAsk email={email} trigger={quespop} setTrigger={setquespop} />
+          </div>
           <TitleCoverPopUp trigger={titlecover} setTrigger={settitlecover} />
         </section>
-
-        <section className="bottom my-8 sm:flex justify-between ">
-          <div className="left md:w-[70%] text-gray-400 px-2 mr-4">
-            {questions.map((question, index) => (
-              <DashQuestion user={user} question={question} />
+        <section className="bottom my-8 sm:flex justify-between">
+          <div className="left md:w-[70%] text-gray-400">
+            {questions.map((question, idx) => (
+              <DashQuestion key={idx} email={email} question={question} />
             ))}
           </div>
         </section>
@@ -186,14 +182,11 @@ export default function Solar(props) {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-
   if (!session) {
     return {};
   }
-
   return {
     props: {
-      // data: res.data      ,
       user: session.user,
     },
   };
