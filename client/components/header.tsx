@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 
-function Header(props) {
-  const user = props?.user;
+interface Props {
+  name: string;
+  image:string;
+}
+
+export const Header: FC<Props> = ({name, image}) => {
   const router = useRouter();
   const [dashvisi, setdashvisi] = useState(false);
   function logout() {
     signOut();
   }
+  console.log(name, "name")
   return (
     <>
       <nav className="text-gray-400 z-50 sticky flex justify-between items-center shadow-md px-8 py-4 top-0 left-0 right-0  bg-white sm:px-16 md:px-24 xl:px-40 2xl:px-48">
@@ -66,21 +71,19 @@ function Header(props) {
               <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
             </svg>
           </li>
+          {
+            name && image ?
           <li className="w-[50px] cursor-pointer">
-            {user && (
               <img
                 className="rounded-full"
-                // loader={myLoader}
-                src={user?.image}
-                alt={user?.name}
+                src={image}
+                alt={name}
                 width={70}
                 height={70}
                 onClick={() => setdashvisi(!dashvisi)}
               />
-            )}
           </li>
-          {!user && (
-            <li>
+         :   <li>
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
                 onClick={() => router.push("/stack/login")}
@@ -88,7 +91,7 @@ function Header(props) {
                 login
               </button>
             </li>
-          )}
+           }
         </ul>{" "}
         <div
           className={` bg-white z-50 top-16 rounded-lg h-fit  w-36 shadow-2xl drop-shadow-lg absolute  right-6 ${

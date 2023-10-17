@@ -1,24 +1,26 @@
 import type { NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import ForuMe from "./stack/forume";
+import { ForuMe } from "./stack/forume";
 
-const Home: NextPage = ({ user }) => {
+export interface User {
+  name: string;
+  email: string;
+  image: string;
+};
+
+export interface Props {
+  user:User
+}
+
+const Home: NextPage<Props> = ({user}) => {
   const { data: session, status } = useSession();
-
-  const router = useRouter();
 
   if (status === "loading") {
     return <p>Loading...</p>;
   }
-
   return (
     <>
-      {/* {status === "unauthenticated" && !session && <Login />} */}
-
-      {/* {status === "authenticated" && session && */}
-      <ForuMe user={user} />
-      {/* //  } */}
+      <ForuMe {...user} />
     </>
   );
 };

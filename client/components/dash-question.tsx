@@ -1,28 +1,20 @@
-import React, { useEffect, useState } from "react";
-
-import Link from "next/link";
+import React, { FC, useEffect, useState } from "react";
 import axios from "axios";
+import { AiFillEdit, AiTwotoneDelete } from "react-icons/ai";
 
-const DashQuestion = ({ question, user }) => {
-  const [qanswers, setQuesAnswers] = useState({});
-  const [data, setData] = useState();
-  const [disableLike, setDisableLike] = useState(false);
-  const [disableDislike, setDisableDislike] = useState(false);
+interface Props {
+  email: string;
+  question:any;
+}
+
+export const DashQuestion: FC<Props> = ({ question, email }) => {
+  const [qanswers, setQuesAnswers] = useState([]);
   const [totalImpression, setTotalImpression] = useState(
     question?.likes?.length - question?.dislikes?.length
   );
 
-  const [appr, setappr] = useState(false);
   const [like, setLike] = useState(question?.likes);
   const [dislike, setDisLike] = useState(question.dislikes);
-
-  const currentDate = new Date();
-  const questionPd = new Date(question.created_at);
-
-  function getDifferenceInDays(date1, date2) {
-    const diffInMs = Math.abs(date2 - date1);
-    return diffInMs / (1000 * 60 * 60 * 24);
-  }
 
   useEffect(() => {
     axios
@@ -32,13 +24,12 @@ const DashQuestion = ({ question, user }) => {
       .then((response) => setQuesAnswers(response.data.data))
       .catch((error) => console.log(error));
   }, []);
-  console.log(qanswers);
 
-  const likePost = (questions, user) => {
+  const likePost = (questions, email) => {
     axios
       .put("https://qna-site-server.onrender.com/api/question/like", {
         postId: questions._id,
-        useremail: user.email,
+        useremail: email,
         coin: questions.coins + 5,
       })
       .then((response) => {
@@ -53,16 +44,15 @@ const DashQuestion = ({ question, user }) => {
         console.log(err);
       });
   };
-  const unlikePost = (questions, user) => {
+  const unlikePost = (questions, email) => {
     axios
       .put(
         "https://qna-site-server.onrender.com/api/question/dislike",
         {
           postId: questions._id,
-          useremail: user.email,
+          useremail: email,
           coin: questions.coins - 5,
         }
-        // }
       )
       .then((response) => {
         setTotalImpression(
@@ -72,7 +62,6 @@ const DashQuestion = ({ question, user }) => {
         setLike(response?.data?.data?.likes);
         setDisLike(response?.data?.data?.dislikes);
       })
-
       .catch((err) => {
         console.log(err);
       });
@@ -89,18 +78,12 @@ const DashQuestion = ({ question, user }) => {
 
   return (
     <>
-      {/* {question.user.name === user.name && ( */}
-      <article className="flex flex-wrap justify-between bg-white py-3 mb-8 shadow-md">
-        <div className="left_part flex items-center">
+      <article className="flex flex-wrap justify-between bg-white py-3 mb-8 shadow-md rounded-lg">
+        <div className="flex items-center">
           <div className="mr-8 mb-2 pl-6">
             <ul className="">
-              {like.includes(user.email) ? (
-                <li
-                  // onClick={() => {
-                  //   likePost(question._id, user.name);
-                  // }}
-                  className=" cursor-pointer"
-                >
+              {like.includes(email) ? (
+                <li className="cursor-pointer">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -117,8 +100,7 @@ const DashQuestion = ({ question, user }) => {
               ) : (
                 <li
                   onClick={() => {
-                    likePost(question, user);
-                    setDisableLike(true);
+                    likePost(question, email);
                   }}
                   className="text-blue-800 cursor-pointer"
                 >
@@ -138,11 +120,10 @@ const DashQuestion = ({ question, user }) => {
               )}
 
               <li className="pl-2 text-base">{totalImpression}</li>
-              {!dislike.includes(user?.email) ? (
+              {!dislike.includes(email) ? (
                 <li
                   onClick={() => {
-                    unlikePost(question, user);
-                    setDisableDislike(true);
+                    unlikePost(question, email);
                   }}
                   className="cursor-pointer text-blue-800"
                 >
@@ -184,44 +165,56 @@ const DashQuestion = ({ question, user }) => {
               </li>
             </ul>
 
-            <ul className=" text-[10px] w-[70%] flex justify-between">
+            <ul className=" text-[10px] w-[70%] flex">
               {question.tags[0] &&
                 question?.tags.map((tags) => (
-                  <li className="bg-gray-100 px-2 py-1 mr-1 mb-2 rounded-md cursor-pointer">
+                  <li className="bg-gray-100 px-3 py-1.5 mr-2 mb-2 rounded-md cursor-pointer">
                     {tags}
                   </li>
                 ))}
             </ul>
           </div>
         </div>
-        <div className="right_part">
-          <ul className="flex flex-col items-center px-2 py-1 border-[1px] border-gray-300 rounded-md text-blue-900 mr-6">
-            <Link
-              href={{
-                pathname: "/stack/que-ans-page",
-                query: {
-                  id: question._id,
-                  ad: getDifferenceInDays(
-                    currentDate,
-                    question.created_at
-                  ).toFixed(),
-                },
-              }}
-              className=" font-semibold  rounded-lg p-1 cursor-pointer   hover:text-green-400"
-            >
-              <li className="text-lg cursor-pointer">
-                <b> {qanswers !== undefined && qanswers.length} </b>
-                answers
-              </li>
-            </Link>
-          </ul>
-          <button
-            className=" mt-2 flex flex-col items-center px-4 py-1 border-[1px] border-gray-300 rounded-md text-blue-900 mr-6"
+        <div className="px-5 py-1">
+        <div className="flex flex-row justify-between mb-1">
+        <button
+            className="px-4 border-[1px] border-gray-300 rounded-md text-red-400 hover:text-red-700 hover:bg-gray-100 h-8"
             onClick={() => {
               deleteQues(question._id);
             }}
           >
-            Delete
+            <AiTwotoneDelete />
+          </button>
+          <button
+            className="px-4 border-[1px] border-gray-300 rounded-md text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+            onClick={() => {
+              deleteQues(question._id);
+            }}
+          >
+            <AiFillEdit />
+          </button>
+        </div>
+          {/* <ul className="flex flex-col items-center px-4 py-1 border-[1px] border-gray-300 rounded-md text-blue-900 mr-6">
+            <Link
+              href={{
+                pathname: "/stack/que-ans-page",
+                query: {
+                  id: question._id
+                },
+              }}
+            >
+              <li className="text-lg cursor-pointer">
+                {`${qanswers.length || 'No'} ${(qanswers.length === 0 || qanswers.length === 1) ? "answer" : "answers"}`}
+              </li>
+            </Link>
+          </ul> */}
+          <button
+            className="border-[1px] border-gray-300 rounded-md text-blue-900 hover:bg-gray-100 w-32 h-9"
+            onClick={() => {
+              deleteQues(question._id);
+            }}
+          >
+                {`${qanswers.length || 'No'} ${(qanswers.length === 0 || qanswers.length === 1) ? "answer" : "answers"}`}
           </button>
         </div>
       </article>

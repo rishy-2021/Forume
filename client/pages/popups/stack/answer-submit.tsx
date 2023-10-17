@@ -1,21 +1,16 @@
+import { FC, useState } from "react";
 import axios from "axios";
-import Image from "next/image";
-import { useState } from "react";
-import { FaStar } from "react-icons/fa";
+
 interface AskProps {
+  email: string;
+  question: any;
   trigger: Boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function AnswerPopUp({
-  trigger,
-  setTrigger,
-  question,
-  user,
-}: AskProps) {
-  const [answer, setAnswer] = useState("");
-  const [Ans_Image, setAns_Image] = useState();
 
-  // console.log(user, "user");
+export const AnswerPopUp : FC<AskProps> =({ email, question, trigger, setTrigger }) => {
+  const [answer, setAnswer] = useState("");
+  const [Ans_Image, setAns_Image] = useState<string>();
 
   // const AnswerSubmit = () => {
   //   console.log(user, "user");
@@ -35,16 +30,15 @@ export default function AnswerPopUp({
   // };
 
   const AnswerSubmit = () => {
-    console.log(user, "user");
     axios
       .post("https://qna-site-server.onrender.com/api/answer", {
         question_id: question._id,
         answer: answer,
-        user: user,
+        email: email, //FIXME: also change in backend user to email
         answerImage: Ans_Image,
       })
       .then((response) => {
-        // console.log(response);
+        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
@@ -52,13 +46,10 @@ export default function AnswerPopUp({
   };
   const handleAImage = (e) => {
     const file = e.target.files[0];
-
     const reader = new FileReader();
-
     reader.readAsDataURL(file);
-
     reader.onloadend = () => {
-      setAns_Image(reader.result);
+      setAns_Image(reader.result?.toString());
     };
   };
   return trigger ? (

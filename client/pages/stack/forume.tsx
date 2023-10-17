@@ -1,19 +1,21 @@
-import  { useEffect, useState } from "react";
+import  { FC, useEffect, useState } from "react";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import ReactLoading from "react-loading";
-import Header from "../../components/header";
-import Question from "../../components/question";
+import {Header} from "../../components/header";
+import {Question} from "../../components/question";
 import LoginPopUp from "../popups/stack/login-popup";
-import QuestionAsk from "../popups/stack/question-ask";
+import {QuestionAsk} from "../popups/stack/question-ask";
 
-function ForuMe({ user }) {
-  const router = useRouter();
+export interface User {
+      name: string;
+      email: string;
+      image: string;
+  };
+
+export const ForuMe: FC<User> = ({name, email, image}) => {
   const [queask, setqueask] = useState(false);
-  const [num, setNum] = useState(0);
-  // const [disapr, setdisapr] = useState(false);
   const [appr, setappr] = useState(false);
   const [Questions, setAllQuestions] = useState([]);
 
@@ -27,36 +29,35 @@ function ForuMe({ user }) {
       .catch((error) => console.log(error));
   }, []);
 
-  useEffect(() => {
-    axios
-      .post("https://qna-site-server.onrender.com/api/coins/getUserCoins", {
-        user: user?.email,
-      })
-      .then(
-        (response) => {
-          console.log("coinsData ");
-
-          if (response.data.data === 404) {
-            axios
-              .post(
-                "https://qna-site-server.onrender.com/api/coins/createUserCoins",
-                {
-                  user: user?.email,
-                }
-              )
-              .then((response) => console.log(response))
-              .catch((error) => console.log(error));
-          } else {
-            console.log("User has already logged in");
-          }
-        }
-      )
-      .catch((error) => console.log(error));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .post("https://qna-site-server.onrender.com/api/coins/getUserCoins", {
+  //       user: email,
+  //     })
+  //     .then(
+  //       (response) => {
+  //         console.log("coinsData ");
+  //         if (response.data.data === 404) {
+  //           axios
+  //             .post(
+  //               "https://qna-site-server.onrender.com/api/coins/createUserCoins",
+  //               {
+  //                 user: email,
+  //               }
+  //             )
+  //             .then((response) => console.log(response))
+  //             .catch((error) => console.log(error));
+  //         } else {
+  //           console.log("User has already logged in");
+  //         }
+  //       }
+  //     )
+  //     .catch((error) => console.log(error));
+  // }, []);
 
   return (
     <div className="relative h-screen">
-      <Header user={user} />
+      <Header name={name} image={image} />
       {/* <div className="m-5 p-7 bg-blue-600 flex justify-center items-center ">
         <input
           className="p-5"
@@ -86,25 +87,25 @@ function ForuMe({ user }) {
           )}
           {Questions &&
             Questions.map((questions, index) => (
-              <Question user={user} questions={questions} key={index} />
+              <Question email ={email} questions={questions} key={index} />
             ))}
         </section>
         <section className="right hidden lg:block mt-16 lg:w-[36%] lg:px-8 xl:w-[26%]">
           <div>
             <ul className="bg-blue-600 text-gray-100 flex justify-center items-center lg:w-48 px-4 py-2 rounded-lg mb-12">
               <li className="mr-2 font-semibold">+</li>
-              {user && (
+              {email && (
                 <li onClick={() => setqueask(true)} className="cursor-pointer">
                   Start a New Topic
                 </li>
               )}
-              {!user && (
+              {!email && (
                 <li onClick={() => setappr(true)} className="cursor-pointer">
                   Start a New Topic
                 </li>
               )}
               <QuestionAsk
-                user={user}
+                email ={email}
                 trigger={queask}
                 setTrigger={setqueask}
               />
@@ -307,19 +308,19 @@ function ForuMe({ user }) {
                 </ul>
               </article>
             </div>
-            {user && (
+            {email && (
               <div className="you">
                 <article className="flex text-xs justify-between items-center my-6 py-4 border-t-[1px] border-gray-300">
                   <ul className="flex justify-between items-center">
                     <li className="w-[30px] mr-2">
                       <Image
                         className="rounded-full"
-                        src={user?.image}
+                        src={image}
                         width={50}
                         height={50}
                       ></Image>
                     </li>
-                    <li className="text-sm text-blue-700 mr-2">{user?.name}</li>
+                    <li className="text-sm text-blue-700 mr-2">{name}</li>
                     <li className="text-sm text-gray-400">(17)</li>
                   </ul>
                   <ul className="flex  justify-between items-center">
@@ -349,8 +350,6 @@ function ForuMe({ user }) {
     </div>
   );
 }
-
-export default ForuMe;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);

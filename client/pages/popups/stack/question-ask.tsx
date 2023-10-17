@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { FC, useState } from "react";
 
 interface AskProps {
+  email:string
   trigger: Boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-  user: any
 }
-export default function QuestionAsk({ user, trigger, setTrigger }: AskProps) {
+export const QuestionAsk : FC<AskProps> = ({ email, trigger, setTrigger }) => {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -31,7 +31,7 @@ export default function QuestionAsk({ user, trigger, setTrigger }: AskProps) {
         title: title,
         body: body,
         tags: tags,
-        user: user,
+        email: email, //FIXME: change user to email in server also
         questionImage: quesImage,
       })
       .then(() => {
@@ -64,16 +64,13 @@ export default function QuestionAsk({ user, trigger, setTrigger }: AskProps) {
                 <h2 className="text-2xl font-semibold mb-4 -tracking-tighter">
                   Create Question
                 </h2>
-
                 <h2
                   className="text-4xl cursor-pointer pr-7"
                   onClick={() => setTrigger(false)}
                 >
-                  {" "}
                   &#215;
                 </h2>
               </div>
-
               <div>
                 <h3 className="text-xl text-gray-700 mb-2">Title</h3>
                 <p className="text-gray-400 text-sm mb-4">
@@ -108,7 +105,6 @@ export default function QuestionAsk({ user, trigger, setTrigger }: AskProps) {
                 ></textarea>
               </div>
               <input type="file" onChange={handleQImage} />
-
               <div>
                 <h3 className="text-xl text-gray-700 mb-4">Tags</h3>
                 <p className="text-gray-400 text-sm mb-4">
@@ -148,7 +144,6 @@ export default function QuestionAsk({ user, trigger, setTrigger }: AskProps) {
                   onClick={() => {
                     setTrigger(false);
                     QuestionSubmit();
-                    // router.push("/stack/admin-question");
                   }}
                 >
                   Post your question

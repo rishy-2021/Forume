@@ -1,23 +1,22 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { FC } from "react";
 
 interface ApprProps {
   trigger: Boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
   question:any;
-  user:any
+  email:string
   type:any
 }
-var id = 0;
-function ReportPopUp({ trigger, setTrigger, question, user, type }: ApprProps) {
-  const [sq, setSq] = useState([]);
+
+export const ReportPopUp: FC<ApprProps> =({ trigger, setTrigger, question, email, type }) => {
 
   function report(question) {
     axios
       .post("https://qna-site-server.onrender.com/api/question/report", {
         qid: question._id,
         quesTitle: question.title,
-        user: user,
+        email: email, //FIXME: also change user to email in respected server file
         type: type,
       })
       .then((response) => console.log(response))
