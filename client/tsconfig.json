@@ -24,8 +24,8 @@
     "noUnusedLocals": false,
     "experimentalDecorators": true,
     "strict": true,
-    "strictFunctionTypes": false,
-    "incremental": true
+    "strictFunctionTypes": true,
+    "incremental": false
   },
   "include": [
     "next-env.d.ts",
