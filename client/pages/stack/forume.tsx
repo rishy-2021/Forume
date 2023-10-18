@@ -17,7 +17,7 @@ export interface User {
 export const ForuMe: FC<User> = ({name, email, image}) => {
   const [queask, setqueask] = useState(false);
   const [appr, setappr] = useState(false);
-  const [Questions, setAllQuestions] = useState([]);
+  const [questions, setAllQuestions] = useState([]);
 
   useEffect(() => {
     axios
@@ -72,7 +72,7 @@ export const ForuMe: FC<User> = ({name, email, image}) => {
       </div> */}
       <main className="md:flex  lg:px-10 xl:px-32 2xl:px-28 md:px-14">
         <section className="text-gray-500 middle mt-16 gap-8 px-4 text-sm sm:px-16 md:px-8 md:w-[70%] xl:w-[79%]">
-          {!Questions && (
+          {!questions && (
             <div className="mt-24 ml-24">
               <ReactLoading
                 type="spinningBubbles"
@@ -85,9 +85,9 @@ export const ForuMe: FC<User> = ({name, email, image}) => {
               </h1>
             </div>
           )}
-          {Questions &&
-            Questions.map((questions, index) => (
-              <Question email ={email} questions={questions} key={index} />
+          {questions &&
+            questions.map((question, index) => (
+              <Question email ={email} question={question} key={index} />
             ))}
         </section>
         <section className="right hidden lg:block mt-16 lg:w-[36%] lg:px-8 xl:w-[26%]">

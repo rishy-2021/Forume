@@ -11,74 +11,79 @@ import {ReportPopUp} from "../pages/popups/stack/report-question";
 import LoginPopUp from "../pages/popups/stack/login-popup";
 import {DateTime} from "luxon"
 import { useDate } from "../utils/use-date";
+import { User } from "../pages";
+
 interface Props {
   email: string;
-  questions:any;
+  question:any;
 }
 
-export const Question: FC<Props> = ({email, questions}) => {
+export const Question: FC<Props> = ({email, question}) => {
   const [sharepop, setsharepop] = useState(false);
   const [queask, setqueask] = useState(false);
   const [answers, setAllAnswers] = useState([]);
-  const [totalImpression, setTotalImpression] = useState(
-    questions?.likes?.length - questions?.dislikes?.length
-  );
 
   const [appr, setappr] = useState(false);
   const [appear, setappear] = useState(false);
-  const [like, setLike] = useState(questions?.likes);
-  const [dislike, setDisLike] = useState(questions.dislikes);
+  const [currentVoteString , setCurrentVoteString] = useState('')
+  const [currentVoteNumber , setCurrentVoteNumber] = useState<number>(question?.likes?.length - question?.dislikes?.length)
 
   const currentDate = DateTime.utc().toISO()!.toString();
 
   useEffect(function () {
     axios
       .post("https://qna-site-server.onrender.com/api/answer/allAnswers", {
-        qid: questions._id,
+        qid: question._id,
       })
       .then((response) => setAllAnswers(response.data.data))
       .catch((error) => console.log(error));
   }, []);
 
-  async function likePost(questions, user) {
-    await axios
-      .put("https://qna-site-server.onrender.com/api/question/like", {
-        postId: questions._id,
-        useremail: user?.email,
-        coin: questions.coins + 5,
+  const handleVoteQuery = (question: any, email: string, query: string) => {
+     axios
+      .put(`https://qna-site-server.onrender.com/api/question/${query}`, {
+        postId: question._id,
+        useremail: email,
+        coin: question.coins + 5,
       })
       .then((response) => {
-        setTotalImpression(
+        setCurrentVoteNumber(
           response?.data?.data?.likes.length -
             response?.data?.data?.dislikes.length
         );
-        setLike(response?.data?.data?.likes);
-        setDisLike(response?.data?.data?.dislikes);
       })
-
       .catch((err) => {
         console.log(err);
       });
   }
 
-  function unlikePost(questions, user) {
-    axios
-      .put("https://qna-site-server.onrender.com/api/question/dislike", {
-        postId: questions._id,
-        useremail: user?.email,
-        coin: questions.coins - 5,
-      })
-      .then((response) => {
-        setTotalImpression(
-          response?.data?.data?.likes.length -
-            response?.data?.data?.dislikes.length
-        );
-        setLike(response?.data?.data?.likes);
-        setDisLike(response?.data?.data?.dislikes);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleVotes = (up:boolean) => {
+    if(up){
+      if(currentVoteString == 'upVote'){
+        setCurrentVoteString('')
+        setCurrentVoteNumber(currentVoteNumber-1);
+      }else if(currentVoteString == 'downVote') {
+        setCurrentVoteString('upVote')
+        setCurrentVoteNumber(currentVoteNumber+2);
+      }
+      else {
+        setCurrentVoteString('upVote')
+        setCurrentVoteNumber(currentVoteNumber+1);
+      }
+      handleVoteQuery(question, email, 'like')
+    } else{
+      if(currentVoteString == 'downVote'){
+        setCurrentVoteString('')
+        setCurrentVoteNumber(currentVoteNumber+1);
+      }else if(currentVoteString == 'upVote') {
+        setCurrentVoteString('downVote')
+        setCurrentVoteNumber(currentVoteNumber-2);
+      } else{
+        setCurrentVoteString('downVote')
+        setCurrentVoteNumber(currentVoteNumber-1);
+      }
+      handleVoteQuery(question, email, 'dislike')
+    }
   }
 
   return (
@@ -87,28 +92,9 @@ export const Question: FC<Props> = ({email, questions}) => {
         <div className="left mt-2 mr-3 md:mr-6">
           <LoginPopUp trigger={appear} setTrigger={setappear} />
           <ul className="flex flex-col items-center">
-            {like.includes(email) ? (
-              <li className=" cursor-pointer">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </li>
-            ) : (
               <li
-                onClick={() => {
-                  email && likePost(questions, email);
-                  !email && setappear(true);
-                }}
-                className="text-blue-500 cursor-pointer"
+              className={`cursor-pointer ${ currentVoteString === 'upVote' ? 'text-blue-500' : ''}`}
+              onClick={()=> handleVotes(true)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -123,42 +109,12 @@ export const Question: FC<Props> = ({email, questions}) => {
                   />
                 </svg>
               </li>
-            )}
-
             <li className="font-semibold ml-1.5 text-base">
-              {
-                totalImpression
-                // || questions?.likes?.length - questions?.dislikes?.length
-              }
+              {currentVoteNumber}
             </li>
-
-            {dislike.includes(email) ? (
-              <li className="cursor-pointer ">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </li>
-            ) : (
-              //
               <li
-                onClick={() => {
-                  {
-                    email && unlikePost(questions, email);
-                  }
-                  {
-                    !email && setappear(true);
-                  }
-                }}
-                className="cursor-pointer text-blue-500"
+              className={`cursor-pointer ${currentVoteString === 'downVote' ?  'text-blue-500' : '' }`}
+              onClick={()=> handleVotes(false)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -173,22 +129,21 @@ export const Question: FC<Props> = ({email, questions}) => {
                   />
                 </svg>
               </li>
-            )}
           </ul>
         </div>
         <div className="right text-sm px-2 w-full">
           <div>
             <div className="flex flex-row relative">
               {/* <h2 className="text-2xl mb-4 text-gray-800">{question.title}</h2> */}
-              <h2 className="text-2xl mb-4 text-gray-800">{questions.title}</h2>
+              <h2 className="text-2xl mb-4 text-gray-800">{question.title}</h2>
               <BsHeart
                 className="absolute right-0 mt-3 mr-8 hover:fill-red-400"
                 size={18}
               />
             </div>
-            <p className="leading-7 pb-3">{questions.body}</p>
+            <p className="leading-7 pb-3">{question.body}</p>
             <div className="flex gap-2">
-              {questions.tags.map((tags) => (
+              {question.tags.map((tags) => (
                 <p className=" rounded-2xl w-fit px-2 bg-gray-400 bg-opacity-20 text-blue-500 border-gray-400 border-[1px] drop-shadow-lg">
                   {tags}
                 </p>
@@ -196,17 +151,14 @@ export const Question: FC<Props> = ({email, questions}) => {
             </div>
           </div>
           <div>
-            {/* <img src={questions?.image} width={50} height={50} /> */}
+            {/* <img src={question?.image} width={50} height={50} /> */}
           </div>
           <div className="flex relative justify-between items-center mt-4 border-t-[1px] border-gray-400  py-4">
             <ul className="flex justify-between items-center text-xs ">
               <li className="w-[26px] mr-2 cursor-pointer">
                 <img
                   className="rounded-full"
-                  src={questions?.user?.image}
-                  //   src={
-                  //     "https://lh3.googleusercontent.com/a/AATXAJwCF0QRAVVAHML_ZjJxtiJ4NiIxeLI_yajuduLMzQ=s96-c"
-                  //   }
+                  src={question?.user?.image}
                   width={70}
                   height={70}
                 ></img>
@@ -214,11 +166,11 @@ export const Question: FC<Props> = ({email, questions}) => {
               <li className="text-[10px] mr-6">
                 Posted by{" "}
                 <span className="text-xs text-blue-500 font-semibold">
-                  {questions?.user?.name}
+                  {question?.user?.name}
                 </span>
               </li>
               <li>
-             { useDate(questions.created_at , currentDate)} ago
+             { useDate(question.created_at , currentDate)} ago
               </li>
             </ul>
 
@@ -227,14 +179,7 @@ export const Question: FC<Props> = ({email, questions}) => {
                 {/* <li className="text-md">Report</li> */}
                 <li
                   className="cursor-pointer text-md"
-                  onClick={() => {
-                    {
-                      email && setappr(true);
-                    }
-                    {
-                      !email && setappear(true);
-                    }
-                  }}
+                  onClick={() => email ? setappr(true) : setappear(true)}
                 >
                   Report
                 </li>
@@ -242,7 +187,7 @@ export const Question: FC<Props> = ({email, questions}) => {
                   email={email}
                   type={"Question"}
                   trigger={appr}
-                  question={questions}
+                  question={question}
                   setTrigger={setappr}
                 />
               </ul>
@@ -261,7 +206,7 @@ export const Question: FC<Props> = ({email, questions}) => {
                     href={{
                       pathname: "/stack/que-ans-page",
                       query: {
-                        id: questions._id
+                        id: question._id
                       },
                     }}
                     className=" font-semibold  rounded-lg p-1   hover:text-green-400"
@@ -290,7 +235,7 @@ export const Question: FC<Props> = ({email, questions}) => {
               href={{
                 pathname: "/stack/que-ans-page",
                 query: {
-                  id: questions._id
+                  id: question._id
                 },
               }}
               className=" font-semibold  rounded-lg p-1   hover:text-green-400"
@@ -307,20 +252,20 @@ export const Question: FC<Props> = ({email, questions}) => {
             </button>
             <AnswerPopUp
               email={email}
-              question={questions}
+              question={question}
               trigger={queask}
               setTrigger={setqueask}
             ></AnswerPopUp>
           </div>
           {/* <AnswerPopUp
             user={user}
-            question={questions}
+            question={question}
             trigger={queask}
             setTrigger={setqueask}
           ></AnswerPopUp> */}
         </div>
       </div>
-      {/* <Answer qid={questions._id} visi={visi}></Answer> */}
+      {/* <Answer qid={question._id} visi={visi}></Answer> */}
     </article>
   );
 }
