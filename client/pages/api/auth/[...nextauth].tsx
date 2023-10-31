@@ -1,10 +1,7 @@
 import NextAuth from "next-auth";
 import nodemailer from "nodemailer";
 import GoogleProvider from "next-auth/providers/google";
-
 import EmailProvider from "next-auth/providers/email";
-// import { text } from "stream/consumers";
-
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "./lib/mongoClient";
 

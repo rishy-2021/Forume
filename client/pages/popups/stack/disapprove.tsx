@@ -18,7 +18,7 @@ function DissaprPopUp({ trigger, setTrigger, ques }: DisapprProps) {
     const user = res.user;
     axios
       .delete(
-        `https://qna-site-server.onrender.com/api/tempquestion/deleteTempQues/${res._id}`,
+        `process.env.NEXT_PUBLIC_TEST/api/tempquestion/deleteTempQues/${res._id}`,
         {
           data: { operation: "reject", user: { user } },
         }

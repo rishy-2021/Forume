@@ -19,7 +19,7 @@ function Answernewpage({ ans, email }) {
 
   const likePost =  (answer, email) => {
      axios
-      .put("https://qna-site-server.onrender.com/api/question/like",{
+      .put(`{${process.env.NEXT_PUBLIC_TEST}/api/question/like}`,{
           postId: answer._id,
           useremail: email,
           coin: answer?.coins + 5,
@@ -39,7 +39,7 @@ function Answernewpage({ ans, email }) {
   };
   const unlikePost = (answer, email) => {
     axios
-      .put("https://qna-site-server.onrender.com/api/question/dislike",{
+      .put(`{${process.env.NEXT_PUBLIC_TEST}/api/question/dislike}`,{
           postId: answer._id,
           useremail: email,
         })

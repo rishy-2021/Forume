@@ -4,15 +4,17 @@ import React, { useState, useEffect } from "react";
 interface ApprProps {
   trigger: Boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  answer:any;
+  user:any;
+  type:string;
 }
-var id = 0;
 function ReportPopUp({ trigger, setTrigger, answer, user, type }: ApprProps) {
   const [sq, setSq] = useState([]);
   console.log("ooooooooooopppppppp", type);
 
   function report(sq, answer) {
     axios
-      .post("https://qna-site-server.onrender.com/api/answer/report", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/answer/report`, {
         qid: sq._id,
         aid: answer._id,
         quesTitle: sq.title,
@@ -26,7 +28,7 @@ function ReportPopUp({ trigger, setTrigger, answer, user, type }: ApprProps) {
 
   useEffect(function () {
     axios
-      .post("http://localhost:3001/api/question/sq", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/api/question/sq`, {
         qid: answer.question_id,
       })
 

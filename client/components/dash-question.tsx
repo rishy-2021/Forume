@@ -18,7 +18,7 @@ export const DashQuestion: FC<Props> = ({ question, email }) => {
 
   useEffect(() => {
     axios
-      .post("https://qna-site-server.onrender.com/api/answer/allAnswers", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/answer/allAnswers`, {
         qid: question._id,
       })
       .then((response) => setQuesAnswers(response.data.data))
@@ -27,7 +27,7 @@ export const DashQuestion: FC<Props> = ({ question, email }) => {
 
   const likePost = (questions, email) => {
     axios
-      .put("https://qna-site-server.onrender.com/api/question/like", {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/question/like`, {
         postId: questions._id,
         useremail: email,
         coin: questions.coins + 5,
@@ -46,14 +46,11 @@ export const DashQuestion: FC<Props> = ({ question, email }) => {
   };
   const unlikePost = (questions, email) => {
     axios
-      .put(
-        "https://qna-site-server.onrender.com/api/question/dislike",
-        {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/question/dislike`,{
           postId: questions._id,
           useremail: email,
           coin: questions.coins - 5,
-        }
-      )
+        })
       .then((response) => {
         setTotalImpression(
           response?.data?.data?.likes.length -
@@ -69,10 +66,7 @@ export const DashQuestion: FC<Props> = ({ question, email }) => {
 
   function deleteQues(sqid) {
     axios
-      .delete(
-        `https://qna-site-server.onrender.com/api/question/delete/${sqid}`
-      )
-      // .then((response) => setData())
+      .delete(`${process.env.NEXT_PUBLIC_TEST}/api/question/delete/${sqid}`)
       .catch((error) => console.log(error));
   }
 

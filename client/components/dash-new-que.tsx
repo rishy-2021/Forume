@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
-import { getSession } from "next-auth/react";
-// import Header from "./header";
-import {
-  // IoShareSocialOutline,
-  IoEllipsisVerticalOutline,
-} from "react-icons/io5";
-// import { IoIosNotificationsOutline } from "react-icons/io";
+import { IoEllipsisVerticalOutline } from "react-icons/io5";
 import { BsHeart } from "react-icons/bs";
-// import DashNewAnswer from "./DashNewAnswer";
 import axios from "axios";
 
 function DashNewQue({ qid, user }) {
@@ -16,10 +9,9 @@ function DashNewQue({ qid, user }) {
   useEffect(
     function () {
       axios
-        .post("https://qna-site-server.onrender.com/api/question/sq", {
+        .post(`${process.env.NEXT_PUBLIC_TEST}/api/question/sq`, {
           qid: qid,
         })
-
         .then((response) => setSq(response.data.data))
         .catch((error) => console.log(error));
     },
@@ -33,15 +25,10 @@ function DashNewQue({ qid, user }) {
 
   const likePost = (id, username) => {
     axios
-      .put(
-        "https://qna-site-server.onrender.com/api/question/like",
-        {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/question/like`,{
           postId: id,
           username: username,
-        }
-        // }
-      )
-      // .then((res) => res.json())
+        })
       .then((result) => {
         console.log(result);
         const newData = data.map((question) => {
@@ -59,15 +46,10 @@ function DashNewQue({ qid, user }) {
   };
   const unlikePost = (id, username) => {
     axios
-      .put(
-        "https://qna-site-server.onrender.com/api/question/dislike",
-        {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/question/dislike`,{
           postId: id,
           username: username,
-        }
-        // }
-      )
-      // .then((res) => res.json())
+        })
       .then((result) => {
         console.log(result);
         const newData = data.map((question) => {

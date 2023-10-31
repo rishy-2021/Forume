@@ -16,7 +16,7 @@ var id = 0;
 function ApprovePopUp({ trigger, setTrigger, ques }: ApprProps) {
   function approved(res) {
     axios
-      .post("https://qna-site-server.onrender.com/api/question", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/question`, {
         response: res,
         operation: "accept",
       })
@@ -25,7 +25,7 @@ function ApprovePopUp({ trigger, setTrigger, ques }: ApprProps) {
 
     axios
       .delete(
-        `https://qna-site-server.onrender.com/api/tempquestion/deleteTempQues/${res._id}`
+        `process.env.NEXT_PUBLIC_TEST/api/tempquestion/deleteTempQues/${res._id}`
       )
       .then((response) => console.log(response))
       .catch((error) => console.log(error));

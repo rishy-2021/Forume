@@ -20,7 +20,7 @@ function Questionnewpage({email, questionId}) {
 
   const likePost = (question, email) => {
     axios
-      .put("https://qna-site-server.onrender.com/api/question/like", {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/question/like`, {
         postId: question._id,
         useremail: email,
         coin: question.coins + 5,
@@ -39,7 +39,7 @@ function Questionnewpage({email, questionId}) {
   };
   const unlikePost = (question, email) => {
     axios
-      .put("https://qna-site-server.onrender.com/api/question/dislike", {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/question/dislike`, {
         postId: question._id,
         useremail: email,
         coin: question?.coins - 5,
@@ -59,7 +59,7 @@ function Questionnewpage({email, questionId}) {
   };
    useEffect(function () {
     axios
-      .post("https://qna-site-server.onrender.com/api/question/sq", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/question/sq`, {
         qid: questionId,
       })
       .then((response) => {
@@ -71,7 +71,7 @@ function Questionnewpage({email, questionId}) {
 
   useEffect(function () {
     axios
-      .post("https://qna-site-server.onrender.com/api/answer/allAnswers", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/answer/allAnswers`, {
         qid: questionId,
       })
       .then((response) => setAllAnswers(response.data.data))

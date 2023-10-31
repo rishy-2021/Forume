@@ -13,7 +13,7 @@ export const ReportPopUp: FC<ApprProps> =({ trigger, setTrigger, question, email
 
   function report(question) {
     axios
-      .post("https://qna-site-server.onrender.com/api/question/report", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/question/report`, {
         qid: question._id,
         quesTitle: question.title,
         email: email, //FIXME: also change user to email in respected server file

@@ -1,25 +1,14 @@
 import React, { useEffect, useState } from "react";
-
-import { getSession, session } from "next-auth/react";
-import Header from "./header";
-import {
-  IoShareSocialOutline,
-  IoEllipsisVerticalOutline,
-} from "react-icons/io5";
-import { IoIosNotificationsOutline } from "react-icons/io";
-import { BsHeart } from "react-icons/bs";
 import DashNewQue from "./dash-new-que";
 import axios from "axios";
 import Sharexpop from "../pages/popups/stack/sharexpop";
 import ReportPopUp from "../pages/popups/stack/report";
 
 function DashNewAnswer({ user }) {
-  const [answers, setUserAnswers] = useState();
-  const [data, setData] = useState();
+  const [answers, setUserAnswers] = useState<[any]>();
   const [answer, setAnswer] = useState({ answer: "" });
   const [AnswerInput, setAnswerInput] = useState(false);
   const [sharepop, setsharepop] = useState(false);
-  const [disapr, setdisapr] = useState(false);
   const [appr, setappr] = useState(false);
   function handleInput(e) {
     const { name, value } = e.target;
@@ -29,12 +18,7 @@ function DashNewAnswer({ user }) {
   useEffect(
     function () {
       axios
-        .post(
-          "https://qna-site-server.onrender.com/api/answer/allUserAnswers",
-          {
-            user: user,
-          }
-        )
+        .post(`${process.env.NEXT_PUBLIC_TEST}/api/answer/allUserAnswers`,{user: user})
         .then((response) => setUserAnswers(response.data.data))
         .catch((error) => console.log(error));
     },
@@ -47,52 +31,37 @@ function DashNewAnswer({ user }) {
   }
 
   const likePost = async (answer, user) => {
-    // if (answer.user.email !== user.email) {
-    //   setScore(score + 1);
-    //   console.log(score);
-    // }
-
     await axios
-      .put(
-        "https://qna-site-server.onrender.com/api/answer/like",
-        {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/answer/like`,{
           postId: answer._id,
           useremail: user.email,
           coin: answer.coins + 5,
-        }
-        // }
-      )
-
+        })
       .catch((err) => {
         console.log(err);
       });
   };
   const unlikePost = (answer, user) => {
     axios
-      .put(
-        "https://qna-site-server.onrender.com/api/answer/dislike",
-        {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/answer/dislike`,{
           postId: answer._id,
           useremail: user.email,
           coin: answer.coins - 5,
-        }
-        // }
-      )
-
+        })
       .catch((err) => {
         console.log(err);
       });
   };
   const deleteAns = (aid) => {
     axios
-      .delete(`https://qna-site-server.onrender.com/api/answer/delete/${aid}`)
+      .delete(`${process.env.NEXT_PUBLIC_TEST}/api/answer/delete/${aid}`)
       .catch((err) => {
         console.log(err);
       });
   };
   const updateAns = (aid) => {
     axios
-      .patch(`https://qna-site-server.onrender.com/api/answer/update/${aid}`, {
+      .patch(`${process.env.NEXT_PUBLIC_TEST}/api/answer/update/${aid}`, {
         answer,
       })
       .catch((err) => {
@@ -265,7 +234,6 @@ function DashNewAnswer({ user }) {
                           >
                             Report
                           </li>
-
                           <ReportPopUp
                             user={user}
                             type={"Answer"}

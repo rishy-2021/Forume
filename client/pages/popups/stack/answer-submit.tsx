@@ -15,7 +15,7 @@ export const AnswerPopUp : FC<AskProps> =({ email, question, trigger, setTrigger
   // const AnswerSubmit = () => {
   //   console.log(user, "user");
   //   axios
-  //     .post("http://localhost:3001/api/tempanswer", {
+  //     .post(`${process.env.NEXT_PUBLIC_TEST}/api/api/tempanswer`, {
   //       question_id: question._id,
   //       answer: answer,
   //       user: user,
@@ -31,7 +31,7 @@ export const AnswerPopUp : FC<AskProps> =({ email, question, trigger, setTrigger
 
   const AnswerSubmit = () => {
     axios
-      .post("https://qna-site-server.onrender.com/api/answer", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/answer`, {
         question_id: question._id,
         answer: answer,
         email: email, //FIXME: also change in backend user to email
