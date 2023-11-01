@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const app = express();
 const routes = require("./Routes/index");
 const bodyParser = require("body-parser");
@@ -21,18 +20,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/api", routes);
-//   app.use("/uploads", express.static(path.join(__dirname, "/../uploads")));
-//   app.use(express.static(path.join(__dirname, "/../frontend/build")));
-
-//   app.get("*", (req, res) => {
-//     try {
-//       res.sendFile(path.join(`${__dirname}/../frontend/build/index.html`));
-//     } catch (e) {
-//       res.send("Welcome to stackoverflow clone");
-//     }
-//   });
-
-// app.use(cors());
 
 app.listen(PORT, () => {
   console.log(`Stack Overflow Clone API is running on PORT No- ${PORT}`);

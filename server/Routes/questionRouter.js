@@ -17,14 +17,12 @@ const {
   getHourlyData,
 } = require("../controller/questionController");
 const Questionrouter = express.Router();
-// const mongoose = require('mongoose')
 
 Questionrouter.route("/").post(addQuestion);
 Questionrouter.route("/addScore").post(addScore);
 Questionrouter.route("/getScore").get(getScore);
 
 Questionrouter.route("/sq").post(singleQuestion);
-
 Questionrouter.route("/allUserQuestions").post(getUserQuestions);
 
 Questionrouter.route("/allQuestions").get(getAllQuestions);
@@ -40,8 +38,6 @@ Questionrouter.route("/getQuesScoreNum").post(getQuesScoreNum);
 
 Questionrouter.route("/update/:id").patch(updateQuestion);
 Questionrouter.route("/delete/:id").delete(deleteQuestion);
-
-// hourdly
 
 Questionrouter.route("/getHourlyData").get(getHourlyData);
 

@@ -5,33 +5,18 @@ const { sendMail } = require("../utility/nodemailer");
 
 module.exports.addQuestion = async function addQuestion(req, res) {
   const operation = req.body.operation;
-
-  //for only explaining and simplicity
-
   if (operation == "accept") {
     sendMail(
       "sendAcceptEmail",
-      // req.body.response.user,
-      req.body.user,
-      "Your Question is accepted by Lead4Needs"
+      req.body.user.email,
+      "Your Question is accepted by foruMe"
     );
   }
-
-  // sendMail("sendemail", details);
   const questionData = new questionModel({
-    // title: req.body.response.title,
     title: req.body.title,
-
-    // body: req.body.response.body,
     body: req.body.body,
-
-    // tags: req.body.response.tags,
     tags: req.body.tags,
-
-    // user: req.body.response.user,
     user: req.body.user,
-
-    // image: req.body.response.image,
     image: req.body.image,
   });
 
@@ -48,7 +33,6 @@ module.exports.addQuestion = async function addQuestion(req, res) {
 };
 
 // /* for Dummy score */
-
 module.exports.addScore = async function addScore(req, res) {
   const scoreData = new scoreModel({
     score: req.body.score,
@@ -69,7 +53,7 @@ module.exports.addScore = async function addScore(req, res) {
 module.exports.getScore = async function getScore(req, res) {
   try {
     let score = await scoreModel.find();
-    // console.log("iiiii", score);
+
     if (score) {
       return res.json({
         message: "all score retrieved ",
@@ -111,9 +95,7 @@ module.exports.getQuesNum = async function getQuesNum(req, res) {
 
 module.exports.singleQuestion = async function singleQuestion(req, res) {
   try {
-    // console.log(req.body.qid);
     let question = await questionModel.findById(req.body.qid);
-    // console.log("iiiii", questions);
     if (question) {
       return res.json({
         message: "single question retrieved ",
@@ -134,7 +116,6 @@ module.exports.singleQuestion = async function singleQuestion(req, res) {
 module.exports.getAllQuestions = async function getAllQuestions(req, res) {
   try {
     let questions = await questionModel.find();
-    // console.log("iiiii", questions);
     if (questions) {
       return res.json({
         message: "all questions retrieved ",
@@ -153,7 +134,7 @@ module.exports.getAllQuestions = async function getAllQuestions(req, res) {
 };
 
 module.exports.getUserQuestions = async function getUserQuestions(req, res) {
-  // console.log(req.body.qid);
+  console.log("getUserQuestions");
   try {
     const question = await questionModel.find({
       user: req.body.user,
@@ -161,7 +142,7 @@ module.exports.getUserQuestions = async function getUserQuestions(req, res) {
 
     if (question) {
       return res.json({
-        message: "all answer retrieved ",
+        message: "all answer retrieved",
         data: question,
       });
     } else {
@@ -177,70 +158,60 @@ module.exports.getUserQuestions = async function getUserQuestions(req, res) {
 };
 
 module.exports.likeQuestions = async function likeQuestions(req, res) {
-  // console.log(req.body.username, req.body.postId);
-  const result = await questionModel.findByIdAndUpdate(
-    req.body.postId,
-    {
-      $set: { coins: req.body.coin },
-      $push: { likes: req.body.useremail },
-      $pull: { dislikes: req.body.useremail },
-    },
-    {
-      new: true,
+  const {body : {postId , useremail}} = req;
+  try {
+    const question = await questionModel.findById(postId);
+    if (!question) {
+      return res.status(404).json({ error: 'Question not found' });
     }
-  );
-  // await questionModel.findByIdAndUpdate(
-  //   req.body.postId,
-  //   {
+    const { likes } = question;
+    const userLiked = likes.includes(useremail);
 
-  //   },
-  //   {
-  //     new: true,
-  //   }
-  // );
-  // console.log(result);
-
-  return res.json({
-    message: "all answer retrieved ",
-    data: result,
-  });
+    if (userLiked) {
+      await questionModel.findByIdAndUpdate(postId, {
+        $pull: { likes: useremail },
+      });
+      res.json({
+         message: 'Like removed successfully' });
+    } else {
+      await questionModel.findByIdAndUpdate(postId, {
+        $addToSet: { likes: useremail },
+      });
+      res.json({ message: 'Liked added successfully' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 module.exports.dislikeQuestions = async function dislikeQuestions(req, res) {
-  const result = await questionModel.findByIdAndUpdate(
-    req.body.postId,
-
-    {
-      $set: { coins: req.body.coin },
-
-      $push: { dislikes: req.body.useremail },
-
-      $pull: { likes: req.body.useremail },
-    },
-    {
-      new: true,
+  const {body : {postId ,coin, useremail}} = req;
+  try {
+    const question = await questionModel.findById(postId);
+    if (!question) {
+      return res.status(404).json({ error: 'Question not found' });
     }
-  );
+    const { dislikes } = question;
+    const userDisliked = dislikes.includes(useremail);
 
-  // await questionModel.findByIdAndUpdate(
-  //   req.body.postId,
-  //   {
-  //     $pull: { likes: req.body.useremail },
-  //   },
-  //   {
-  //     new: true,
-  //   }
-  // );
-
-  return res.json({
-    message: "all answer retrieved ",
-    data: result,
-  });
+    if (userDisliked) {
+      await questionModel.findByIdAndUpdate(postId, {
+        $pull: { dislikes: useremail },
+      });
+      res.json({ message: 'Disliked removed successfully' });
+    } else {
+      await questionModel.findByIdAndUpdate(postId, {
+        $addToSet: { dislikes: useremail },
+      });
+      res.json({ message: 'Disliked added successfully' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 module.exports.reportQuestion = async function reportQuestion(req, res) {
-  console.log("iiiiiiiiiiiiiiiiiiiiiiiiiii");
-
-  // sendMail("sendemail", details);
   const reportData = new reportModel({
     question_id: req.body.qid,
     quesTitle: req.body.quesTitle,
@@ -264,7 +235,6 @@ module.exports.reportQuestion = async function reportQuestion(req, res) {
 module.exports.updateQuestion = async function (req, res) {
   try {
     let id = req.params.id;
-    // console.log(id);
     let dataToBeUpdated = req.body;
     let keys = [];
     for (let key in dataToBeUpdated) {
@@ -288,7 +258,6 @@ module.exports.updateQuestion = async function (req, res) {
 module.exports.deleteQuestion = async function deleteQuestion(req, res) {
   try {
     let id = req.params.id;
-    // console.log(id);
     let deletedQuestion = await questionModel.findByIdAndDelete(id);
     return res.json({
       message: "question deleted successfully",
@@ -304,8 +273,6 @@ module.exports.deleteQuestion = async function deleteQuestion(req, res) {
 module.exports.getQuesScoreNum = async function getQuesNum(req, res) {
   try {
     const Qnum = await questionModel.find({ user: req.body.email });
-    // .count();
-
     if (Qnum) {
       return res.json({
         message: " question retrieved ",
@@ -327,11 +294,9 @@ module.exports.getQuesScoreNum = async function getQuesNum(req, res) {
 module.exports.getHourlyData = async function getHourlyData(req, res) {
   try {
     let currentData = new Date();
-
     let year = currentData.getFullYear();
     let month = currentData.getMonth();
     let date1 = currentData.getDate();
-    console.log(new Date(year, month, date1));
 
     const ghd = await questionModel.aggregate([
       {

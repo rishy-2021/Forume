@@ -5,7 +5,6 @@ const questionSchema = new mongoose.Schema(
     title: String,
     body: String,
     tags: [{ type: String }],
-
     created_at: {
       type: Date,
       default: Date.now(),
@@ -14,13 +13,7 @@ const questionSchema = new mongoose.Schema(
     coins: { type: Number, default: 0 },
     likes: [{ type: String }],
     dislikes: [{ type: String }],
-    image: String,
-    // comment_id: {
-    //   // type: mongoose.Schema.types.ObjectId,
-    //   // ref: "Comments",
-    //   type: String,
-    //   default: 0001,
-    // },
+    image: String
   },
   {
     timestamps: true,
