@@ -10,8 +10,6 @@ export const AnswerDash: FC<Props> = ({ qid, name }) => {
   const [answers, setAllAnswers] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]); //FIXME: fix any type
   const currentDate = new Date();
-  // const answerPd = new Date(answer.created_at);
-  //   console.log(answers, qid);
 
   function getDifferenceInDays(date1, date2) {
     const diffInMs = Math.abs(date2 - date1);
@@ -21,7 +19,7 @@ export const AnswerDash: FC<Props> = ({ qid, name }) => {
   useEffect(
     function () {
       axios
-        .post("https://qna-site-server.onrender.com/api/answer/allAnswers", {
+        .post(`${process.env.NEXT_PUBLIC_TEST}/api/answer/allAnswers`, {
           qid: qid,
         })
         .then((response) => setAllAnswers(response.data.data))
@@ -32,12 +30,10 @@ export const AnswerDash: FC<Props> = ({ qid, name }) => {
 
   const likePost = (id, username) => {
     axios
-      .put(
-        "https://qna-site-server.onrender.com/api/answer/like",{
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/answer/like`,{
           postId: id,
-          username: username,
-        }
-      )
+          username: username
+        })
       .then((result) => {
         const newData = data.map((answer) => {
           if (answer._id == result._id) {
@@ -54,14 +50,10 @@ export const AnswerDash: FC<Props> = ({ qid, name }) => {
   };
   const unlikePost = (id, username) => {
     axios
-      .put(
-        "https://qna-site-server.onrender.com/api/answer/dislike",
-        {
+      .put(`${process.env.NEXT_PUBLIC_TEST}/api/answer/dislike`,{
           postId: id,
           username: username,
-        }
-        // }
-      )
+        })
       .then((result) => {
         console.log(result);
         const newData = data.map((answer) => {
@@ -111,35 +103,6 @@ export const AnswerDash: FC<Props> = ({ qid, name }) => {
             <div className="down text-md px-2 flex items-start gap-6">
               <div className="left">
                 <ul>
-                  {/* <li>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </li>
-                  <li>56</li>
-                  <li>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </li> */}
                   {answer.likes.includes(user.name) ? (
                     <li
                       // onClick={() => {

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-// import Admin_Header from "./Admin_Header";
-// import Listing_Header from "./Listing_Header";
 
 interface Message {
   name: string;
@@ -15,17 +13,14 @@ function Feedback() {
 
   useEffect(function () {
     axios
-      .get("https://qna-site-server.onrender.com/api/message/getMessages")
+      .get(`${process.env.NEXT_PUBLIC_TEST}/api/message/getMessages`)
       .then((response) => setAllMessages(response.data.data))
       .catch((error) => console.log(error));
   });
 
   function dismiss(mid) {
     axios
-      .delete(
-        `https://qna-site-server.onrender.com/api/message/deleteMessages/${mid}`
-      )
-      // .then((response) => setAllMessages(response.data.data))
+      .delete(`${process.env.NEXT_PUBLIC_TEST}/api/message/deleteMessages/${mid}`)
       .catch((error) => console.log(error));
   }
 
@@ -46,7 +41,6 @@ function Feedback() {
                     <input
                       className="outline-none px-4 py-2 border-2 border-gray-200 rounded-md"
                       type="text"
-                      //   placeholder="Enter your name"
                       value={message.name}
                     />
                   </ul>
@@ -78,9 +72,7 @@ function Feedback() {
               </div>
               <button
                 className="w-fit h-fit p-4 bg-indigo-500 text-white rounded-lg"
-                onClick={() => {
-                  dismiss(message._id);
-                }}
+                onClick={() => dismiss(message._id)}
               >
                 Dismiss
               </button>

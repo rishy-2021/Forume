@@ -12,7 +12,7 @@ function Contact({ user }) {
 
   function sendMessage() {
     axios
-      .post("https://qna-site-server.onrender.com/api/message", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/message`, {
         name: name,
         email: email,
         message: message,
@@ -29,10 +29,7 @@ function Contact({ user }) {
         <div className="left lg:w-[50%]">
           <div className="top bg-[url('/images/city.jpg')] bg-cover bg-center h-[1000px] cover"></div>
           <div className="down flex gap-1 sm:gap-16 md:gap-36 lg:gap-8 xl:gap-24 justify-center items-center text-xs px-6 py-6 bg-gray-300 sm:px-8 sm:py-4 md:px-14 lg:px-40">
-            <ul
-              className="flex mr-2 items-center font-bold
-                     text-gray-400"
-            >
+            <ul className="flex mr-2 items-center font-bold text-gray-400">
               <li className="w-[20px] mr-1">
                 <Image
                   className="text-blue-400"

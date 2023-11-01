@@ -17,9 +17,7 @@ function Admin_Question() {
   useEffect(
     function () {
       axios
-        .get(
-          "https://qna-site-server.onrender.com/api/tempquestion/getTempQues"
-        )
+        .get(`${process.env.NEXT_PUBLIC_TEST}/api/tempquestion/getTempQues`)
         .then((response) => setTempQues(response.data.data))
         .catch((error) => console.log(error));
     },
@@ -30,14 +28,14 @@ function Admin_Question() {
 
   //   function approved(res) {
   //     axios
-  //       .post("http://localhost:3001/quiz/main/addMainQuiz", {
+  //       .post(`${process.env.NEXT_PUBLIC_TEST}/api/quiz/main/addMainQuiz`, {
   //         response: res,
   //       })
   //       .then((response) => console.log(response))
   //       .catch((error) => console.log(error));
 
   //     axios
-  //       .delete(`http://localhost:3001/quiz/deleteTempQuizs/${res._id}`)
+  //       .delete(`process.env.NEXT_PUBLIC_TEST/api/quiz/deleteTempQuizs/${res._id}`)
   //       .then((response) => console.log(response))
   //       .catch((error) => console.log(error));
   //   }

@@ -1,4 +1,4 @@
-import  { FC, useEffect, useState } from "react";
+import  { FC, useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
@@ -14,62 +14,29 @@ export interface User {
       image: string;
   };
 
-export const ForuMe: FC<User> = ({name, email, image}) => {
+export const ForuMe: FC<User> = (user) => {
+  const {name, email, image} = user
   const [queask, setqueask] = useState(false);
   const [appr, setappr] = useState(false);
   const [questions, setAllQuestions] = useState([]);
 
-  useEffect(() => {
+  const getAllQuestion = () =>{
     axios
-      .get("https://qna-site-server.onrender.com/api/question/allQuestions")
-      .then((response) => {
-        setAllQuestions(response.data.data);
-        console.log("Question Fetched");
-      })
-      .catch((error) => console.log(error));
-  }, []);
+    .get(`${process.env.NEXT_PUBLIC_TEST}/api/question/allQuestions`)
+    .then((response) => {
+      setAllQuestions(response.data.data);
+      console.log(response,"Question Fetched");
+    })
+    .catch((error) => console.log(error));
+  };
 
-  // useEffect(() => {
-  //   axios
-  //     .post("https://qna-site-server.onrender.com/api/coins/getUserCoins", {
-  //       user: email,
-  //     })
-  //     .then(
-  //       (response) => {
-  //         console.log("coinsData ");
-  //         if (response.data.data === 404) {
-  //           axios
-  //             .post(
-  //               "https://qna-site-server.onrender.com/api/coins/createUserCoins",
-  //               {
-  //                 user: email,
-  //               }
-  //             )
-  //             .then((response) => console.log(response))
-  //             .catch((error) => console.log(error));
-  //         } else {
-  //           console.log("User has already logged in");
-  //         }
-  //       }
-  //     )
-  //     .catch((error) => console.log(error));
-  // }, []);
+  useEffect(() => {
+   getAllQuestion()
+  }, []);
 
   return (
     <div className="relative h-screen">
       <Header name={name} image={image} />
-      {/* <div className="m-5 p-7 bg-blue-600 flex justify-center items-center ">
-        <input
-          className="p-5"
-          type="string"
-          onChange={(e) => {
-            setNum(e.target.value);
-          }}
-        />
-        <button className="bg-red-600 m-5 p-2 rounded-lg" onClick={saveScore}>
-          Save Quiz Score
-        </button>
-      </div> */}
       <main className="md:flex  lg:px-10 xl:px-32 2xl:px-28 md:px-14">
         <section className="text-gray-500 middle mt-16 gap-8 px-4 text-sm sm:px-16 md:px-8 md:w-[70%] xl:w-[79%]">
           {!questions && (
@@ -105,11 +72,16 @@ export const ForuMe: FC<User> = ({name, email, image}) => {
                 </li>
               )}
               <QuestionAsk
-                email ={email}
+                user ={user}
                 trigger={queask}
-                setTrigger={setqueask}
+                setTrigger={(tri)=>{
+                  setqueask(tri)
+                  getAllQuestion()
+                }}
               />
-              <LoginPopUp trigger={appr} setTrigger={setappr} />
+              <LoginPopUp trigger={appr} setTrigger={(tri)=>{
+                setappr(tri)
+                }} />
             </ul>
           </div>
           <div className="shadow-lg w-full text-gray-400 shadow-gray-600 rounded-xl mt-5">

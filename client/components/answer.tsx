@@ -10,7 +10,7 @@ function Answer({ visi }: AnswerProp) {
   // const [answers, setAllAnswers] = useState([]);
   // useEffect(function () {
   //   axios
-  //     .post("http://localhost:3001/api/answer/allAnswers", {
+  //     .post(`{${process.env.NEXT_PUBLIC_TEST}/api/api/answer/allAnswers}`, {
   //       qid: questions._id,
   //     })
   //     .then((response) => setAllAnswers(response.data.data))

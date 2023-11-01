@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { getSession } from "next-auth/react";
@@ -25,21 +25,15 @@ export default function Solar ({email }: User) {
   useEffect(
     function () {
       axios
-        .post(
-          "https://qna-site-server.onrender.com/api/question/allUserQuestions",
-          {
+        .post(`${process.env.NEXT_PUBLIC_TEST}/api/question/allUserQuestions`,{
             email: email, //FIXME: also change in server user to email
-          }
-        )
+          })
         .then((response) => setQuestions(response.data.data))
         .catch((error) => console.log(error));
       axios
-        .post(
-          "https://qna-site-server.onrender.com/api/answer/allUserAnswers",
-          {
+        .post(`${process.env.NEXT_PUBLIC_TEST}/api/answer/allUserAnswers`,{
             email: email, //FIXME: also change in server user to email
-          }
-        )
+          })
         .then((response) => setUserAnswers(response.data.data))
         .catch((error) => console.log(error));
     },
@@ -47,7 +41,7 @@ export default function Solar ({email }: User) {
   );
   useEffect(() => {
     axios
-      .post("http://localhost:3001/api/coins/getUserCoins", { email: email }) //FIXME: also change in server user to email
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/api/coins/getUserCoins`, { email: email }) //FIXME: also change in server user to email
       .then((response) => {
         console.log("coinsData ", response);
         setuserCoins(response.data.data);
@@ -71,7 +65,7 @@ export default function Solar ({email }: User) {
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
               </svg>
             </li>
-            <li className="" onClick={() => router.push("/stack/foruMe")}>
+            <li className="" onClick={() => router.push("/")}>
               Home
             </li>
           </ul>

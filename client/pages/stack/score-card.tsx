@@ -10,27 +10,23 @@ function ScoreCard({ user }) {
 
   useEffect(function () {
     axios
-
-      .post("http://localhost:3001/api/question/getQuesNum", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/api/question/getQuesNum`, {
         email: user,
       })
       .then((response) => setQnum(response.data.data))
       .catch((error) => console.log(error));
 
     axios
-
-      .get("http://localhost:3001/api/question/getScore")
+      .get(`${process.env.NEXT_PUBLIC_TEST}/api/api/question/getScore`)
       .then((response) => setScore(response.data.data))
       .catch((error) => console.log(error));
 
     axios
-      .post("http://localhost:3001/api/answer/getAnsNum", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/api/answer/getAnsNum`, {
         email: user,
       })
       .then((response) => {
-        // const [anum, setAnum] = useState(0);
         let inum = 0;
-
         response.data.data.map((ans, index) => {
           inum = inum + ans.coins;
         });
@@ -39,13 +35,11 @@ function ScoreCard({ user }) {
       .catch((error) => console.log(error));
 
     axios
-      .post("http://localhost:3001/api/question/getQuesScoreNum", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/api/question/getQuesScoreNum`, {
         email: user,
       })
       .then((response) => {
-        // const [anum, setAnum] = useState(0);
         let inum = 0;
-
         response.data.data.map((ques, index) => {
           inum = inum + ques.coins;
         });
@@ -56,7 +50,6 @@ function ScoreCard({ user }) {
 
   let progresiveScore = ((anum + qsnum) / 80000) * 100;
   let pScore = progresiveScore.toFixed();
-  console.log(pScore);
 
   return (
     <main className=" px-4 py-4 w-screen">

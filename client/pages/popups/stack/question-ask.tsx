@@ -1,14 +1,13 @@
-import axios from "axios";
-import { useRouter } from "next/router";
 import { FC, useState } from "react";
+import axios from "axios";
+import { User } from "../..";
 
 interface AskProps {
-  email:string
+  user:User
   trigger: Boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export const QuestionAsk : FC<AskProps> = ({ email, trigger, setTrigger }) => {
-  const router = useRouter();
+export const QuestionAsk : FC<AskProps> = ({ user, trigger, setTrigger }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [quesImage, setQuesImage] = useState("");
@@ -25,17 +24,17 @@ export const QuestionAsk : FC<AskProps> = ({ email, trigger, setTrigger }) => {
     setTags(tags.filter((el, i) => i !== index));
   }
 
-  const QuestionSubmit = () => {
+  const questionSubmit = () => {
     axios
-      .post("https://qna-site-server.onrender.com/api/question", {
+      .post(`${process.env.NEXT_PUBLIC_TEST}/api/question`, {
         title: title,
         body: body,
         tags: tags,
-        email: email, //FIXME: change user to email in server also
+        user: user,
         questionImage: quesImage,
       })
       .then(() => {
-        window.location.reload();
+        setTrigger(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -74,18 +73,18 @@ export const QuestionAsk : FC<AskProps> = ({ email, trigger, setTrigger }) => {
               <div>
                 <h3 className="text-xl text-gray-700 mb-2">Title</h3>
                 <p className="text-gray-400 text-sm mb-4">
-                  To be specific and imagine you ar asking a question to another
+                  To be specific and imagine you are asking a question to another
                   person
                 </p>
                 <input
-                  className="outline-none w-full border-[1px] border-gray-500 rounded-md px-10 py-3"
+                  className="outline-none w-full border-[1px] border-gray-500 rounded-md px-3 py-3"
                   type="text"
                   onChange={(e) => {
                     setTitle(e.target.value);
                   }}
                   name=""
                   id=""
-                  placeholder=""
+                  placeholder="title"
                 />
               </div>
               <div>
@@ -95,7 +94,7 @@ export const QuestionAsk : FC<AskProps> = ({ email, trigger, setTrigger }) => {
                   question
                 </p>
                 <textarea
-                  className="outline-none w-full border-[1px] border-gray-500 rounded-md"
+                  className="outline-none w-full border-[1px] border-gray-500 rounded-md p-3"
                   name=""
                   onChange={(e) => {
                     setBody(e.target.value);
@@ -142,8 +141,7 @@ export const QuestionAsk : FC<AskProps> = ({ email, trigger, setTrigger }) => {
                 <button
                   className="bg-blue-500 border-2 border-gray-100 text-gray-50 px-4 py-2 mr-6 rounded-lg"
                   onClick={() => {
-                    setTrigger(false);
-                    QuestionSubmit();
+                    questionSubmit();
                   }}
                 >
                   Post your question
